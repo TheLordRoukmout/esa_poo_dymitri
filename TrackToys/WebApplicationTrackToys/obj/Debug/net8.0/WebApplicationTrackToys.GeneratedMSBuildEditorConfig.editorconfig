@@ -1,0 +1,27 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = WebApplicationTrackToys
+build_property.RootNamespace = WebApplicationTrackToys
+build_property.ProjectDir = /Users/robert/Documents/GitHub/esa_poo_dymitri/TrackToys/WebApplicationTrackToys/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /Users/robert/Documents/GitHub/esa_poo_dymitri/TrackToys/WebApplicationTrackToys
+build_property._RazorSourceGeneratorDebug = 
+
+[/Users/robert/Documents/GitHub/esa_poo_dymitri/TrackToys/WebApplicationTrackToys/Views/Cars/AllCars.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2Fycy9BbGxDYXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/robert/Documents/GitHub/esa_poo_dymitri/TrackToys/WebApplicationTrackToys/Views/Cars/Cars.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2Fycy9DYXJzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 

@@ -80,6 +80,21 @@ public class ConnexionData {
                     + "FOREIGN KEY(id_role) REFERENCES Roles(id_role)"
                     + ");";
 
+            String sqlChronos = "CREATE TABLE IF NOT EXISTS Chronos("
+                    + "id_chrono INTEGER PRIMARY KEY,"
+                    + "id_client INTEGER NOT NULL,"
+                    + "id_voiture INTEGER NOT NULL,"
+                    + "id_circuit INTEGER NOT NULL,"
+                    + "chronoStart TEXT NOT NULL,"
+                    + "chronoEnd TEXT NOT NULL,"
+                    + "date_chrono TEXT NOT NULL,"
+                    + "id_admin INTEGER NOT NULL,"
+                    + "FOREIGN KEY(id_client) REFERENCES Clients(id_client),"
+                    + "FOREIGN KEY(id_voiture) REFERENCES Voitures(id_voiture),"
+                    + "FOREIGN KEY(id_circuit) REFERENCES Circuits(id_circuit),"
+                    + "FOREIGN KEY(id_admin) REFERENCES Admins(id_admin)"
+                    +");";
+
             stmt.execute(sqlVoitures);
             stmt.execute(sqlCircuits);
             stmt.execute(sqlRoles);
@@ -87,6 +102,7 @@ public class ConnexionData {
             stmt.execute(sqlReservation);
             stmt.execute(sqlMaintenance);
             stmt.execute(sqlAdmin);
+            stmt.execute(sqlChronos);
 
             //Insertion automatique d'un admin
             stmt.execute("INSERT OR IGNORE INTO Roles(id_role, nom_role) VALUES (1, 'Admin');");

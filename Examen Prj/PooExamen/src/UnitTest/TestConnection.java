@@ -18,4 +18,22 @@ public class TestConnection {
         conn.close();
 
     }
+
+    @Test
+    void testCreatingAdmin() throws SQLException {
+        Connection conn = ConnexionData.getConnection();
+
+        var stmt = conn.createStatement();
+        var rs = stmt.executeQuery("SELECT COUNT (*) AS total FROM Admin WHERE mail_admin = 'admin@tracktoys.com'");
+
+        rs.next();
+        int total = rs.getInt("total");
+
+        assertTrue(total >= 1, "Un compte admin devrait exister");
+
+        rs.close();
+        stmt.close();
+        conn.close();
+
+    }
 }

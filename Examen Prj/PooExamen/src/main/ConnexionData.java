@@ -11,6 +11,7 @@ public class ConnexionData {
     // Méthode pour connecter et initialiser la db
     public static Connection getConnection() throws SQLException {
         Connection conn = DriverManager.getConnection(url);
+        conn.createStatement().execute("PRAGMA foreign_keys=ON");
         initializeDatabase(conn);
         return conn;
     }
@@ -74,6 +75,7 @@ public class ConnexionData {
                     + "nom_admin TEXT NOT NULL,"
                     + "prenom_admin TEXT NOT NULL,"
                     + "mail_admin TEXT NOT NULL,"
+                    + "password_admin TEXT NOT NULL,"
                     + "id_role INTEGER NOT NULL,"
                     + "FOREIGN KEY(id_role) REFERENCES Roles(id_role)"
                     + ");";
@@ -85,6 +87,20 @@ public class ConnexionData {
             stmt.execute(sqlReservation);
             stmt.execute(sqlMaintenance);
             stmt.execute(sqlAdmin);
+
+            //Insertion automatique d'un admin
+            stmt.execute("INSERT OR IGNORE INTO Roles(id_role, nom_role) VALUES (1, 'Admin');");
+
+            //Vérification de l'existance d'un admin
+            var rs = stmt.executeQuery("SELECT COUNT(*) AS TOTAL FROM Admin;");
+            if (rs.next() && rs.getInt("total") == 0) {
+                String insertAdmin = "INSERT INTO Admin(id_admin, nom_admin, prenom_admin, mail_admin, password_admin, id_role)"
+                        + "VALUES (1, 'Super', 'Admin', 'admin@tracktoys.com', 'admin123', 1);";
+                stmt.executeUpdate(insertAdmin);
+                System.out.println("Admin created");
+            }else{
+                System.out.println("Admin already exists");
+            }
 
             System.out.println("Database check and initialized");
 

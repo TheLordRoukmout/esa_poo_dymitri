@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 public class LoginService {
 
-    public boolean LoginSystem (String mail, String password) {
+    public static boolean LoginSystem (String mail, String password) {
         String sqlrequest = "SELECT * FROM Admin WHERE mail_admin = ? AND password_admin = ?";
 
         try(Connection conn = ConnexionData.getConnection();

@@ -104,8 +104,9 @@ public class ConnexionData {
             stmt.execute(sqlAdmin);
             stmt.execute(sqlChronos);
 
-            //Insertion automatique d'un admin
+            //Insertion automatique du role admin et client
             stmt.execute("INSERT OR IGNORE INTO Roles(id_role, nom_role) VALUES (1, 'Admin');");
+            stmt.execute("INSERT OR IGNORE INTO Roles(id_role, nom_role) VALUES (2, 'Client');");
 
             //Vérification de l'existance d'un admin
             var rs = stmt.executeQuery("SELECT COUNT(*) AS TOTAL FROM Admin;");
@@ -115,10 +116,10 @@ public class ConnexionData {
                 stmt.executeUpdate(insertAdmin);
                 System.out.println("Admin created");
             }else{
-                System.out.println("Admin already exists");
+                //System.out.println("Admin already exists");
             }
 
-            System.out.println("Database check and initialized");
+            //System.out.println("Database check and initialized");
 
         } catch (SQLException e) {
             System.err.println("Error: " + e.getMessage());

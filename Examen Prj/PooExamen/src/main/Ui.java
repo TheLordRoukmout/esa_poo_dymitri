@@ -9,8 +9,38 @@ public class Ui {
     public boolean isAdmin;
 
     public void startLoginSystem() {  // Plus static
-        System.out.println("=== LOGIN TRACKTOYS ===");
+        System.out.println("=== Bienvenue sur TRACKTOYS");
 
+        boolean exit = false;
+
+        while (!exit) {
+            System.out.println("\n1. Login");
+            System.out.println("2. Create an account");
+            System.out.println("3. Exit");
+            System.out.print("Your choice: ");
+
+            String choice = scanner.nextLine();
+
+            switch (choice){
+                case "1":
+                    LoginSystem();
+                    break;
+                case "2":
+                    CreatingAccountLogin();
+                    break;
+                case "3":
+                    System.out.println("Good bye !");
+                    exit = true;
+                    break;
+                default:
+                    System.out.println("Invalid input retry.");
+            }
+
+        }
+    }
+
+    private void LoginSystem(){
+        System.out.println("=== LOGIN TRACKTOYS ===");
         int attempts = 0;
         boolean authenticated = false;
         boolean[] adminFlag = new boolean[1];
@@ -30,14 +60,19 @@ public class Ui {
                 showMainMenu();  // Renommé en camelCase
             } else {
                 attempts++;
-                System.out.printf("\nFailed to connect, attempts remaining: %d%n",
-                        (MAX_ATTEMPTS - attempts));
+                System.out.printf("\nFailed to connect, attempts remaining: %d%n", (MAX_ATTEMPTS - attempts));
+                }
+            }
+
+            if (!authenticated) {
+                System.out.println("Too many failed attempts. Please restart the app.");
             }
         }
 
-        if (!authenticated) {
-            System.out.println("Too many failed attempts. Please restart the app.");
-        }
+    }
+
+    private void CreatingAccountLogin(){
+        System.out.println("\n=== CRÉATION DE COMPTE ===");
     }
 
     private void showMainMenu() {  // Plus static

@@ -119,6 +119,15 @@ public class ConnexionData {
                 //System.out.println("Admin already exists");
             }
 
+            // Vérification de l'existence d'un client
+            var rsClient = stmt.executeQuery("SELECT COUNT(*) AS total FROM Clients;");
+            if (rsClient.next() && rsClient.getInt("total") == 0) {
+                String insertClient = "INSERT INTO Clients(nom_client, prenom_client, age_client, numPermis_client, mail_client, password_client, id_role) "
+                        + "VALUES ('Jean', 'Client', 30, 'PERMIS123', 'client@tracktoys.com', '1234', 2);";
+                stmt.executeUpdate(insertClient);
+                System.out.println("Client created");
+            }
+
             //System.out.println("Database check and initialized");
 
         } catch (SQLException e) {

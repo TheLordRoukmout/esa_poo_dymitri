@@ -31,4 +31,56 @@ public class LoginService {
         return false;
     }
 
+    public boolean loginAdmin(String mail, String password) {
+        boolean[] isAdmin = new boolean[1];
+
+        if(LoginSystem(mail, password, isAdmin)){
+            if (isAdmin[0]){
+                System.out.println("Admin logged in");
+            }else {
+                System.out.println("Admin logged out");
+            }
+            return true;
+        }
+        String sqlClient = "SELECT * FROM Clients WHERE mail_client = ? AND password_client = ?";
+
+        try (Connection conn = ConnexionData.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sqlClient)){
+            stmt.setString(1, mail);
+            stmt.setString(2, password);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()){
+                System.out.println("Client logged in");
+                return true;
+            }
+        }catch (SQLException e){
+            System.err.println("Login Error" + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean loginClient(String mail, String password) {
+        String sql = "SELECT * FROM Clients WHERE mail_client = ? AND password_client = ?";
+
+        try (Connection conn = ConnexionData.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, mail);
+            stmt.setString(2, password);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return true; // client trouvé
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur connexion client : " + e.getMessage());
+        }
+
+        return false; // aucun client trouvé
+    }
+
+
 }

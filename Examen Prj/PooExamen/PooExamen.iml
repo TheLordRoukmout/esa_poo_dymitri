@@ -10,5 +10,6 @@
     <orderEntry type="library" name="taosdata.jdbc.taos.jdbcdriver" level="project" />
     <orderEntry type="library" name="junit.jupiter" level="project" />
     <orderEntry type="library" name="xerial.sqlite.jdbc" level="project" />
+    <orderEntry type="library" name="slf4j.jdk14" level="project" />
   </component>
 </module>

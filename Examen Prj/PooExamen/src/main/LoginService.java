@@ -7,60 +7,75 @@ import java.sql.SQLException;
 
 public class LoginService {
 
-    public static boolean LoginSystem (String mail, String password, boolean[] isAdmin) {
-        String sqlrequest = "SELECT a.id_role, r.nom_role FROM Admin a " +
-                "INNER JOIN Roles r ON a.id_role = r.id_role " +
-                "WHERE a.mail_admin = ? AND a.password_admin = ?";
-
-        try(Connection conn = ConnexionData.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sqlrequest)){
-
-            stmt.setString(1, mail);
-            stmt.setString(2, password);
-
-            ResultSet rs = stmt.executeQuery();
-
-            if(rs.next()){
-                String roleName = rs.getString("nom_role");
-                isAdmin[0] = "admin".equalsIgnoreCase(roleName);
-                return true;
-            }
-        }catch (SQLException e) {
-            System.err.println("Login Error" + e.getMessage());
-        }
-        return false;
-    }
-
-    public boolean loginAdmin(String mail, String password) {
-        boolean[] isAdmin = new boolean[1];
-
-        if(LoginSystem(mail, password, isAdmin)){
-            if (isAdmin[0]){
-                System.out.println("Admin logged in");
-            }else {
-                System.out.println("Admin logged out");
-            }
-            return true;
-        }
-        String sqlClient = "SELECT * FROM Clients WHERE mail_client = ? AND password_client = ?";
+    private LoginResult loginClientAsFallback(String mail, String password) {
+        String sqlClient = "SELECT password_client FROM Clients WHERE mail_client = ?";
 
         try (Connection conn = ConnexionData.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sqlClient)){
-            stmt.setString(1, mail);
-            stmt.setString(2, password);
+             PreparedStatement stmt = conn.prepareStatement(sqlClient)) {
 
+            stmt.setString(1, mail);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()){
-                System.out.println("Client logged in");
-                return true;
+
+            if (!rs.next()) {
+                return new LoginResult(false, "❌ Aucun compte trouvé avec cet email.");
             }
-        }catch (SQLException e){
-            System.err.println("Login Error" + e.getMessage());
+
+            String passwordEnBase = rs.getString("password_client");
+
+            if (!passwordEnBase.equals(password)) {
+                return new LoginResult(false, "❌ Mot de passe incorrect pour le compte client.");
+            }
+
+            return new LoginResult(true, "✅ Connexion client réussie.");
+
+        } catch (SQLException e) {
+            return new LoginResult(false, "❌ Erreur SQL (client) : " + e.getMessage());
         }
-        return false;
     }
 
-    public boolean loginClient(String mail, String password) {
+
+    public LoginResult loginAdmin(String mail, String password) {
+        // 1. Vérifier si un admin existe avec cet email
+        String sqlAdmin = "SELECT password_admin, r.nom_role FROM Admin a " +
+                "JOIN Roles r ON a.id_role = r.id_role " +
+                "WHERE mail_admin = ?";
+
+        try (Connection conn = ConnexionData.getConnection();
+             PreparedStatement stmtAdmin = conn.prepareStatement(sqlAdmin)) {
+
+            stmtAdmin.setString(1, mail);
+            ResultSet rsAdmin = stmtAdmin.executeQuery();
+
+            if (rsAdmin.next()) {
+                String passwordEnBase = rsAdmin.getString("password_admin");
+                String role = rsAdmin.getString("nom_role");
+
+                // Email trouvé, on vérifie le mot de passe
+                if (!passwordEnBase.equals(password)) {
+                    return new LoginResult(false, "❌ Mot de passe incorrect pour le compte admin.");
+                }
+
+                // Mot de passe correct → vérifier le rôle
+                if ("admin".equalsIgnoreCase(role)) {
+                    return new LoginResult(true, "✅ Connexion admin réussie.");
+                } else {
+                    // Pas admin → tenter client
+                    return loginClientAsFallback(mail, password);
+                }
+
+            } else {
+                // Aucun admin avec cet email → tenter client
+                return loginClientAsFallback(mail, password);
+            }
+
+        } catch (SQLException e) {
+            return new LoginResult(false, "❌ Erreur SQL (admin) : " + e.getMessage());
+        }
+    }
+
+
+
+    public LoginResult loginClient(String mail, String password) {
         String sql = "SELECT * FROM Clients WHERE mail_client = ? AND password_client = ?";
 
         try (Connection conn = ConnexionData.getConnection();
@@ -68,18 +83,21 @@ public class LoginService {
 
             stmt.setString(1, mail);
             stmt.setString(2, password);
-
             ResultSet rs = stmt.executeQuery();
 
-            if (rs.next()) {
-                return true; // client trouvé
+            if (!rs.next()) {
+                return new LoginResult(false, "Fail: Wrong or Email not found.");
+            }
+            String passWordDataBase = rs.getString("password_client");
+            if(!passWordDataBase.equals(password)){
+                return new LoginResult(false, "Fail: Wrong password");
             }
 
-        } catch (SQLException e) {
-            System.err.println("Erreur connexion client : " + e.getMessage());
-        }
+            return new LoginResult(true, "Connection sucessfull !");
 
-        return false; // aucun client trouvé
+        } catch (SQLException e) {
+            return new LoginResult(false, "Error SQL: " +e.getMessage());
+        }
     }
 
 

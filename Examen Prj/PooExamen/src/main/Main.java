@@ -1,5 +1,6 @@
 package main;
 
+import UnitTest.TestAdminService;
 import org.checkerframework.checker.guieffect.qual.UI;
 
 public class Main {
@@ -7,20 +8,21 @@ public class Main {
         LoginService login = new LoginService();
 
         // Connexion avec l'admin
-        boolean adminOK = login.loginAdmin("admin@tracktoys.com", "admin123");
-        if (adminOK) {
-            System.out.println("Connexion admin réussie !");
-        } else {
-            System.out.println("Connexion admin échouée.");
+        LoginResult adminResult = login.loginAdmin("admin@tracktoys.com", "admin123");
+        System.out.println(adminResult.message);
+        if(adminResult.success){
+            Circuit circuit = new Circuit("Spa Francorchamps", "Liège spa", 80.00);
+            AdminService adminAction = new AdminService();
+            if(adminAction.addCircuit(circuit)){
+                System.out.println("Circuit " + circuit.getNom() + " ajouté avec succès !");
+            }else {
+                System.out.println("Ce circuit existe déja ou une erreur est survenue.");
+            }
         }
-
         // Connexion avec le client
-        boolean clientOK = login.loginClient("client@tracktoys.com", "1234");
-        if (clientOK) {
-            System.out.println("Connexion client réussie !");
-        } else {
-            System.out.println("Connexion client échouée.");
-        }
+        LoginService loginClient = new LoginService();
+        LoginResult result = login.loginClient("client@tracktoys.com", "1234");
+        System.out.println(result.message);
     }
 }
 

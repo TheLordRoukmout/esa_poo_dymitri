@@ -36,4 +36,19 @@ public class TestAdminService {
         boolean secondAjout = adminAction.addCircuit(testCircuit);
         assertFalse(secondAjout, "L'ajout devrait échouer car le circuit existe déjà.");
     }
+
+    @Test
+    void testAjoutSansAdresse() {
+        AdminService admin = new AdminService();
+        Circuit circuit = new Circuit("Circuit Sans Adresse", "", 50);
+        assertFalse(admin.addCircuit(circuit), "Le circuit ne doit pas être ajouté sans adresse.");
+    }
+
+    @Test
+    void testAjoutAvecTarifInvalide() {
+        AdminService admin = new AdminService();
+        Circuit circuit = new Circuit("Circuit Gratuit", "Rue gratuite", 0);
+        assertFalse(admin.addCircuit(circuit), "Le circuit ne doit pas être ajouté avec un tarif nul.");
+    }
+
 }

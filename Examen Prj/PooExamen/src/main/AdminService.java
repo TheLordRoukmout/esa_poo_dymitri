@@ -8,6 +8,22 @@ import java.sql.SQLException;
 public class AdminService {
 
     public boolean addCircuit(Circuit circuit){
+        // Vérifications avant insertion
+        if (circuit.getNom() == null || circuit.getNom().trim().isEmpty()) {
+            System.out.println("❌ Le nom du circuit est vide.");
+            return false;
+        }
+
+        if (circuit.getAdresse() == null || circuit.getAdresse().trim().isEmpty()) {
+            System.out.println("❌ L'adresse du circuit est vide.");
+            return false;
+        }
+
+        if (circuit.getTarif() <= 0) {
+            System.out.println("❌ Le tarif du circuit doit être supérieur à 0.");
+            return false;
+        }
+
         if(circuitAlreadyExist(circuit.getNom())){
             System.out.println("Le circuit: " + circuit.getNom() + "existe déja.");
             return false;

@@ -10,17 +10,17 @@ public class AdminService {
     public boolean addCircuit(Circuit circuit){
         // Vérifications avant insertion
         if (circuit.getNom() == null || circuit.getNom().trim().isEmpty()) {
-            System.out.println("❌ Le nom du circuit est vide.");
+            System.out.println("Le nom du circuit est vide.");
             return false;
         }
 
         if (circuit.getAdresse() == null || circuit.getAdresse().trim().isEmpty()) {
-            System.out.println("❌ L'adresse du circuit est vide.");
+            System.out.println("L'adresse du circuit est vide.");
             return false;
         }
 
         if (circuit.getTarif() <= 0) {
-            System.out.println("❌ Le tarif du circuit doit être supérieur à 0.");
+            System.out.println("Le tarif du circuit doit être supérieur à 0.");
             return false;
         }
 
@@ -67,10 +67,60 @@ public class AdminService {
 
             stmt.setString(1, nom);
             int rows = stmt.executeUpdate();
-            System.out.println("🧹 Suppression : " + rows + " ligne(s) supprimée(s).");
+            System.out.println("Suppression : " + rows + " ligne(s) supprimée(s).");
 
         } catch (SQLException e) {
-            System.err.println("❌ Erreur lors de la suppression du circuit : " + e.getMessage());
+            System.err.println("Erreur lors de la suppression du circuit : " + e.getMessage());
         }
     }
+
+    public boolean addVoiture(Voitures voiture){
+        if(voiture.getModele() == null || voiture.getModele().trim().isEmpty()) {
+            System.out.println("Le modele du voiture est vide.");
+            return false;
+        }
+
+        if(voiture.getPuissance() <=0){
+            System.out.println("Le puissance du voiture est vide.");
+            return false;
+        }
+
+        String sqlRequest = "INSERT INTO Voitures(model_voiture, puissance_voiture, priceLocation_voiture, disponibilite_voiture) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = ConnexionData.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sqlRequest)){
+
+            stmt.setString(1, voiture.getModele());
+            stmt.setInt(2, voiture.getPuissance());
+            stmt.setDouble(3, voiture.getPrixLocation());
+            stmt.setInt(4, voiture.getDisponible() ? 1 : 0);
+
+            int lignes = stmt.executeUpdate();
+            return lignes > 0;
+
+        }catch (SQLException e){
+            System.out.println("Erreur lors de l'ajour de la voiture: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public void supprimerVoiture(int idVotiure){
+        String sqlRequest = "DELETE FROM Voitures WHERE id_Voiture = ?";
+
+        try (Connection conn = ConnexionData.getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sqlRequest)){
+
+            stmt.setInt(1, idVotiure);
+            int lignes = stmt.executeUpdate();
+
+            if(lignes > 0){
+                System.out.println("Suppression : " + lignes + " voiture(s).");
+            }else {
+                System.out.println("Auncune voiture trouvé avec l'id donné.");
+            }
+        }catch (SQLException e){
+            System.out.println("Erreur lors de la suppression du voiture: " + e.getMessage());
+        }
+    }
+
 }

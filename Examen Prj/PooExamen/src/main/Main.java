@@ -18,7 +18,16 @@ public class Main {
             }else {
                 System.out.println("Ce circuit existe déja ou une erreur est survenue.");
             }
+            Voitures voiture = new Voitures("Porsche 911 GT3", 510, 250.0, true);
+            if(adminAction.addVoiture(voiture)){
+                System.out.println("Voiture: "+ voiture.getModele() + " ajouté !");
+            }else {
+                System.out.println("Echec de l'ajout");
+            }
+            
+            adminAction.supprimerVoiture(1);
         }
+
         // Connexion avec le client
         LoginService loginClient = new LoginService();
         LoginResult result = login.loginClient("client@tracktoys.com", "1234");

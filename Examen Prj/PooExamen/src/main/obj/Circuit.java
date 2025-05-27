@@ -1,8 +1,4 @@
-package main;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+package main.obj;
 
 public class Circuit {
     private String nom;

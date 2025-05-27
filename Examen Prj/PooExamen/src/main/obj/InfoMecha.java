@@ -1,4 +1,4 @@
-package main;
+package main.obj;
 
 public class InfoMecha {
     private int idVoiture;

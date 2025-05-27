@@ -33,7 +33,7 @@ public class ConnexionData {
                     + "fuelLive_infomecha REAL NOT NULL,"
                     + "kilometrage_infomecha REAL NOT NULL,"
                     + "etat_infomecha TEXT NOT NULL,"
-                    + "FOREIGN KEY(id_voiture) REFERENCES Voitures(id_voiture)"
+                    + "FOREIGN KEY(id_voiture) REFERENCES Voitures(id_voiture) ON DELETE CASCADE"
                     + ");";
 
             String sqlCircuits = "CREATE TABLE IF NOT EXISTS Circuits("

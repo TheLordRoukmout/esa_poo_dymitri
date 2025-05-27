@@ -1,9 +1,9 @@
 package main;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import main.obj.Circuit;
+import main.obj.Voitures;
+
+import java.sql.*;
 
 public class AdminService {
 
@@ -68,7 +68,7 @@ public class AdminService {
 
             stmt.setString(1, nom);
             int rows = stmt.executeUpdate();
-            System.out.println("Suppression : " + rows + " ligne(s) supprimée(s).");
+            System.out.println("Suppression du circuit: " + nom + " supprimé.");
 
             return rows > 0;
 
@@ -92,7 +92,7 @@ public class AdminService {
         String sqlRequest = "INSERT INTO Voitures(model_voiture, puissance_voiture, priceLocation_voiture, disponibilite_voiture) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = ConnexionData.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sqlRequest)){
+        PreparedStatement stmt = conn.prepareStatement(sqlRequest, Statement.RETURN_GENERATED_KEYS)){
 
             stmt.setString(1, voiture.getModele());
             stmt.setInt(2, voiture.getPuissance());
@@ -100,10 +100,28 @@ public class AdminService {
             stmt.setInt(4, voiture.getDisponible() ? 1 : 0);
 
             int lignes = stmt.executeUpdate();
-            return lignes > 0;
+
+
+            if(lignes > 0){
+                ResultSet generatedKeys = stmt.getGeneratedKeys();
+                if(generatedKeys.next()){
+                    int idVoiture = generatedKeys.getInt(1);
+
+                    boolean infoMechaOk = addInfoMechaData(idVoiture, 50.0, 8.0, 0.0, "Roulable");
+                    if(infoMechaOk){
+                        System.out.println("Voiture avec fiche méchanique ajoutée.");
+                    }else{
+                        System.out.println("Voiture ajoutée mais pas d'information méchanique");
+                    }
+
+                    return true;
+                }
+            }
+
+            return false;
 
         }catch (SQLException e){
-            System.out.println("Erreur lors de l'ajour de la voiture: " + e.getMessage());
+            System.out.println("Erreur lors de l'ajout de la voiture: " + e.getMessage());
             return false;
         }
     }
@@ -118,7 +136,7 @@ public class AdminService {
             int lignes = stmt.executeUpdate();
 
             if(lignes > 0){
-                System.out.println("Suppression : " + lignes + " voiture(s).");
+                System.out.println("Suppression : " + lignes + " voiture" + " + sa fiche méchanique.");
                 return true;
             }else {
                 System.out.println("Auncune voiture trouvé avec l'id donné.");
@@ -144,23 +162,50 @@ public class AdminService {
         }
     }
 
-    public boolean addInfoMechData(int idVoiture, double fuelMax){
-        String sqlRequest = "INSERT INTO InfoMecha(id_voiture, fuelMa_infoMecha, fuelLive_infoMecha, kilometrage_infomecha, etat_infomecha)"
-                + "VALUES (?, ?, ?, ?)";
+
+    public boolean addInfoMechaData(int idVoiture, double fuelMax, double fuelLive, double kilometrage, String etat) {
+        String sql = "INSERT INTO InfoMecha(id_voiture, fuelMax_infomecha, fuelLive_infomecha, kilometrage_infomecha, etat_infomecha) "
+                + "VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnexionData.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sqlRequest)){
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, idVoiture);
             stmt.setDouble(2, fuelMax);
-            stmt.setDouble(3, fuelMax);
-            stmt.setDouble(4, 0.0);
-            stmt.setString(5, "En fonction");
+            stmt.setDouble(3, fuelLive);
+            stmt.setDouble(4, kilometrage);
+            stmt.setString(5, etat);
 
-            return stmt.executeUpdate() > 0;
-        }catch (SQLException e){
-            System.err.println("Erreur pour l'ajour de donnée méchanique" + e.getMessage());
+            int lignes = stmt.executeUpdate();
+            if (lignes > 0) {
+                System.out.println("✅ Fiche mécanique ajoutée avec succès !");
+                return true;
+            } else {
+                System.out.println("❌ Aucune ligne ajoutée.");
+                return false;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur ajout InfoMecha : " + e.getMessage());
             return false;
         }
     }
+
+
+    public int getLastVoitureIdByModele(String modele){
+        String sqlRequest = "SELECT id_voiture FROM Voitures WHERE model_voiture = ? ORDER BY id_voiture DESC LIMIT 1";
+        try(Connection conn = ConnexionData.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sqlRequest)){
+            stmt.setString(1, modele);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                return rs.getInt("id_voiture");
+            }
+        }catch (SQLException e){
+            System.err.println("Erreur récupération ID voiture: " + e.getMessage());
+        }
+        return -1;
+    }
+
 
 }

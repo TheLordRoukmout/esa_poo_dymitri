@@ -1,9 +1,7 @@
 package main;
 
-import UnitTest.TestAdminService;
-import org.checkerframework.checker.guieffect.qual.UI;
-
-import java.sql.Connection;
+import main.obj.Circuit;
+import main.obj.Voitures;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,31 +10,50 @@ public class Main {
         // Connexion avec l'admin
         LoginResult adminResult = login.loginAdmin("admin@tracktoys.com", "admin123");
         System.out.println(adminResult.message);
+
         if(adminResult.success){
-            Circuit circuit = new Circuit("Spa Francorchamps", "Liège spa", 80.00, 6);
             AdminService adminAction = new AdminService();
+
+            // --- Ajout du circuit ---
+            Circuit circuit = new Circuit("Spa Francorchamps", "Liège spa", 80.00, 6);
             if(adminAction.addCircuit(circuit)){
-                System.out.println("Circuit " + circuit.getNom() + " ajouté avec succès !");
-            }else {
-                System.out.println("Ce circuit existe déja ou une erreur est survenue.");
+                System.out.println("✅ Circuit " + circuit.getNom() + " ajouté !");
+            } else {
+                System.out.println("❌ Circuit déjà existant.");
             }
+
+            // --- Ajout de la voiture ---
             Voitures voiture = new Voitures("Porsche 911 GT3", 510, 250.0, true);
 
             if(adminAction.voitureAlreadyExist(voiture.getModele())){
-                System.out.println("Voiture" + voiture.getModele() + " Exisite déja");
+                System.out.println("⚠️ Voiture " + voiture.getModele() + " existe déjà");
             }
 
             if(adminAction.addVoiture(voiture)){
-                System.out.println("Voiture: "+ voiture.getModele() + " ajouté !");
-            }else {
-                System.out.println("Echec de l'ajout");
+                System.out.println("✅ Voiture: "+ voiture.getModele() + " ajoutée !");
+
+                // Récupérer l’ID de la voiture qu’on vient d’ajouter
+                int idVoiture = adminAction.getLastVoitureIdByModele(voiture.getModele());
+
+                // Ajouter les infos mécaniques manuellement
+                boolean ficheOK = adminAction.addInfoMechaData(idVoiture, 80.0, 8.0, 0.00, "Roulable");
+
+                if (ficheOK) {
+                    System.out.println("✅ Fiche mécanique ajoutée !");
+                } else {
+                    System.out.println("❌ Erreur ajout fiche méca.");
+                }
+
+            } else {
+                System.out.println("❌ Échec de l'ajout de la voiture");
             }
-            
+
+            // Suppression test
+            adminAction.supprimerCircuitParNom(circuit.getNom());
             adminAction.supprimerVoiture(1);
         }
 
         // Connexion avec le client
-        LoginService loginClient = new LoginService();
         LoginResult result = login.loginClient("client@tracktoys.com", "1234");
         System.out.println(result.message);
     }

@@ -1,8 +1,8 @@
 package UnitTest;
 
 import main.AdminService;
-import main.Circuit;
-import main.Voitures;
+import main.obj.Circuit;
+import main.obj.Voitures;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -84,5 +84,26 @@ public class TestAdminService {
         assertTrue(result, "Voiture " + voitureToDelete.getModele() + " supprimé !");
     }
 
+    @Test
+    void testAjoutEtSuppressionFicheMecha() {
+        AdminService admin = new AdminService();
+
+        // 1. Ajouter une voiture temporaire
+        Voitures testVoiture = new Voitures("TempCar", 350, 120.0, true);
+        boolean voitureAjoutee = admin.addVoiture(testVoiture);
+        assertTrue(voitureAjoutee, "La voiture devrait être ajoutée.");
+
+        // 2. Récupérer son ID
+        int idVoiture = admin.getLastVoitureIdByModele(testVoiture.getModele());
+        assertTrue(idVoiture > 0, "L'ID de la voiture devrait être supérieur à 0.");
+
+        // 3. Ajouter une fiche InfoMecha
+        boolean ficheAjoutee = admin.addInfoMechaData(idVoiture, 60.0, 8.0, 0.0, "Neuve");
+        assertTrue(ficheAjoutee, "La fiche InfoMecha devrait être ajoutée.");
+
+        // 5. Supprimer la voiture
+        boolean voitureSupprimee = admin.supprimerVoiture(idVoiture);
+        assertTrue(voitureSupprimee, "La voiture devrait être supprimée.");
+    }
 
 }

@@ -26,10 +26,21 @@ public class ConnexionData {
                     + "disponibilite_voiture INTEGER NOT NULL"
                     + ");";
 
+            String sqlInfosMecha = "CREATE TABLE IF NOT EXISTS InfoMecha("
+                    + "id_infomecha INTEGER PRIMARY KEY,"
+                    + "id_voiture INTEGER NOT NULL,"
+                    + "fuelMax_infomecha REAL NOT NULL,"
+                    + "fuelLive_infomecha REAL NOT NULL,"
+                    + "kilometrage_infomecha REAL NOT NULL,"
+                    + "etat_infomecha TEXT NOT NULL,"
+                    + "FOREIGN KEY(id_voiture) REFERENCES Voitures(id_voiture)"
+                    + ");";
+
             String sqlCircuits = "CREATE TABLE IF NOT EXISTS Circuits("
                     + "id_circuit INTEGER PRIMARY KEY,"
                     + "nom_circuit TEXT NOT NULL UNIQUE,"
                     + "adresse_circuit TEXT NOT NULL,"
+                    + "distance_circuit REAL NOT NULL,"
                     + "tarif_circuit REAL NOT NULL"
                     + ");";
 
@@ -96,6 +107,7 @@ public class ConnexionData {
                     +");";
 
             stmt.execute(sqlVoitures);
+            stmt.execute(sqlInfosMecha);
             stmt.execute(sqlCircuits);
             stmt.execute(sqlRoles);
             stmt.execute(sqlClients);

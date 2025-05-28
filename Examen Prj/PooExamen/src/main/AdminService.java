@@ -109,7 +109,7 @@ public class AdminService {
 
                     boolean infoMechaOk = addInfoMechaData(idVoiture, 50.0, 8.0, 0.0, "Roulable");
                     if(infoMechaOk){
-                        System.out.println("Voiture avec fiche méchanique ajoutée.");
+                        System.out.println("✅ Voiture: " + voiture.getModele() + " avec fiche méchanique ajoutée.");
                     }else{
                         System.out.println("Voiture ajoutée mais pas d'information méchanique");
                     }
@@ -178,7 +178,7 @@ public class AdminService {
 
             int lignes = stmt.executeUpdate();
             if (lignes > 0) {
-                System.out.println("✅ Fiche mécanique ajoutée avec succès !");
+                //System.out.println("✅ Fiche mécanique ajoutée avec succès !");
                 return true;
             } else {
                 System.out.println("❌ Aucune ligne ajoutée.");

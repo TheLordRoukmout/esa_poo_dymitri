@@ -5,13 +5,17 @@ import main.obj.Voitures;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("Connexion en tant qu'admin....");
+
         LoginService login = new LoginService();
 
         // Connexion avec l'admin
         LoginResult adminResult = login.loginAdmin("admin@tracktoys.com", "admin123");
         System.out.println(adminResult.message);
+        System.out.println("\n________________________________________ ");
 
         if(adminResult.success){
+            System.out.println("L'admin créer un circuit et un véhicule pour l'évenement à venir.");
             AdminService adminAction = new AdminService();
 
             // --- Ajout du circuit ---
@@ -30,7 +34,6 @@ public class Main {
             }
 
             if(adminAction.addVoiture(voiture)){
-                System.out.println("✅ Voiture: "+ voiture.getModele() + " ajoutée !");
 
                 // Récupérer l’ID de la voiture qu’on vient d’ajouter
                 int idVoiture = adminAction.getLastVoitureIdByModele(voiture.getModele());
@@ -39,7 +42,7 @@ public class Main {
                 boolean ficheOK = adminAction.addInfoMechaData(idVoiture, 80.0, 8.0, 0.00, "Roulable");
 
                 if (ficheOK) {
-                    System.out.println("✅ Fiche mécanique ajoutée !");
+
                 } else {
                     System.out.println("❌ Erreur ajout fiche méca.");
                 }
@@ -47,6 +50,7 @@ public class Main {
             } else {
                 System.out.println("❌ Échec de l'ajout de la voiture");
             }
+            System.out.println("\n________________________________________ ");
 
             // Suppression test
             adminAction.supprimerCircuitParNom(circuit.getNom());

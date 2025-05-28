@@ -63,14 +63,17 @@ public class ConnexionData {
 
             String sqlReservation = "CREATE TABLE IF NOT EXISTS Reservation("
                     + "id_reservation INTEGER PRIMARY KEY,"
+                    + "nom_event TEXT NOT NULL,"
                     + "id_client INTEGER,"
                     + "id_voiture INTEGER,"
+                    + "id_circuit INTEGER,"
                     + "startDate_reservation TEXT NOT NULL,"
                     + "endDate_reservation TEXT NOT NULL,"
                     + "prixSeance_reservation REAL NOT NULL,"
                     + "status_reservation INTEGER NOT NULL,"
-                    + "FOREIGN KEY(id_client) REFERENCES Clients(id_client),"
-                    + "FOREIGN KEY(id_voiture) REFERENCES Voitures(id_voiture)"
+                    + "FOREIGN KEY(id_client) REFERENCES Clients(id_client) ON DELETE CASCADE,"
+                    + "FOREIGN KEY(id_voiture) REFERENCES Voitures(id_voiture) ON DELETE CASCADE,"
+                    + "FOREIGN KEY(id_circuit) REFERENCES Circuits(id_circuit) ON DELETE CASCADE"
                     + ");";
 
             String sqlMaintenance = "CREATE TABLE IF NOT EXISTS Maintenance("

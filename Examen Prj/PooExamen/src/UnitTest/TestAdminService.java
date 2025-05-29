@@ -102,7 +102,7 @@ public class TestAdminService {
         assertTrue(ficheAjoutee, "La fiche InfoMecha devrait être ajoutée.");
 
         // 5. Supprimer la voiture
-        boolean voitureSupprimee = admin.supprimerVoiture("Porsche 911 GT3");
+        boolean voitureSupprimee = admin.supprimerVoiture("TempCar");
         assertTrue(voitureSupprimee, "La voiture devrait être supprimée.");
     }
 

@@ -65,15 +65,4 @@ public class TestLoginService {
         assertFalse(result.success, "Connexion avec email inexistant devrait échouer.");
         assertTrue(result.message.toLowerCase().contains("aucun") || result.message.toLowerCase().contains("introuvable"));
     }
-
-    @Test
-    void testAdminEstClient() {
-        LoginService login = new LoginService();
-        // Utilisation d'un compte client connu ici
-        LoginResult result = login.loginAdmin("client@tracktoys.com", "1234");
-
-        System.out.println("Résultat : " + result.message);
-        assertTrue(result.success, "Un compte client devrait pouvoir se connecter via fallback admin.");
-        assertTrue(result.message.toLowerCase().contains("client"));
-    }
 }

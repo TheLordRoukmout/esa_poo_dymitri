@@ -8,7 +8,17 @@ import java.sql.*;
 
 public class AdminService {
 
+    private final LoginService loginService;
+
+    public AdminService() {
+        this.loginService = null;
+    }
+
     public boolean addCircuit(Circuit circuit){
+        if(loginService != null && !loginService.isAdminConnected()){
+            System.out.println("Action réfusé vous devez être admin");
+            return false;
+        }
         // Vérifications avant insertion
         if (circuit.getNom() == null || circuit.getNom().trim().isEmpty()) {
             System.out.println("Le nom du circuit est vide.");
@@ -48,6 +58,11 @@ public class AdminService {
     }
 
     public boolean circuitAlreadyExist(String nom){
+        if(loginService != null && !loginService.isAdminConnected()){
+            System.out.println("Action réfusé vous devez être admin");
+            return false;
+        }
+
         String sqlRequest = "SELECT 1 FROM Circuits WHERE nom_circuit = ? LIMIT 1";
         try (Connection conn = ConnexionData.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sqlRequest)){
@@ -62,6 +77,11 @@ public class AdminService {
     }
 
     public boolean supprimerCircuitParNom(String nom) {
+        if(loginService != null && !loginService.isAdminConnected()){
+            System.out.println("Action réfusé vous devez être admin");
+            return false;
+        }
+
         String sql = "DELETE FROM Circuits WHERE nom_circuit = ?";
 
         try (Connection conn = ConnexionData.getConnection();
@@ -80,6 +100,11 @@ public class AdminService {
     }
 
     public boolean addVoiture(Voitures voiture){
+        if(loginService != null && !loginService.isAdminConnected()){
+            System.out.println("Action réfusé vous devez être admin");
+            return false;
+        }
+
         if(voiture.getModele() == null || voiture.getModele().trim().isEmpty()) {
             System.out.println("Le modele du voiture est vide.");
             return false;
@@ -128,6 +153,11 @@ public class AdminService {
     }
 
     public boolean supprimerVoiture(String nomVotiure){
+        if(loginService != null && !loginService.isAdminConnected()){
+            System.out.println("Action réfusé vous devez être admin");
+            return false;
+        }
+
         String sqlRequest = "DELETE FROM Voitures WHERE model_Voiture = ?";
 
         try (Connection conn = ConnexionData.getConnection();
@@ -150,6 +180,11 @@ public class AdminService {
     }
 
     public boolean voitureAlreadyExist(String nom){
+        if(loginService != null && !loginService.isAdminConnected()){
+            System.out.println("Action réfusé vous devez être admin");
+            return false;
+        }
+
         String sqlRequest = "SELECT 1 FROM Voitures WHERE model_voiture = ? LIMIT 1";
         try (Connection conn = ConnexionData.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sqlRequest)){
@@ -165,6 +200,11 @@ public class AdminService {
 
 
     public boolean addInfoMechaData(int idVoiture, double fuelMax, double fuelLive, double kilometrage, String etat) {
+        if(loginService != null && !loginService.isAdminConnected()){
+            System.out.println("Action réfusé vous devez être admin");
+            return false;
+        }
+
         String sql = "INSERT INTO InfoMecha(id_voiture, fuelMax_infomecha, fuelLive_infomecha, kilometrage_infomecha, etat_infomecha) "
                 + "VALUES (?, ?, ?, ?, ?)";
 
@@ -194,6 +234,7 @@ public class AdminService {
 
 
     public int getLastVoitureIdByModele(String modele){
+
         String sqlRequest = "SELECT id_voiture FROM Voitures WHERE model_voiture = ? ORDER BY id_voiture DESC LIMIT 1";
         try(Connection conn = ConnexionData.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sqlRequest)){

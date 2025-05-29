@@ -63,10 +63,11 @@ public class Main {
                 System.out.println("Evènement " + evenementDemo.getNomEvenement() + " a été créér.");
             }
             System.out.println("\n________________________________________ ");
-
+            LoginResult logoutResult = login.logout();
+            System.out.println(logoutResult.message);
 
             // Suppression test
-            //adminAction.supprimerCircuitParNom(circuit.getNom());
+            adminAction.supprimerCircuitParNom(circuit.getNom());
             adminAction.supprimerVoiture("Porsche 911 GT3");
             //serviceEvenement.deleEvent("Spa en Juin");
         }

@@ -4,8 +4,11 @@ import main.obj.Circuit;
 import main.obj.Evenement;
 import main.obj.Voitures;
 import services.AdminService;
+import services.ClientService;
 import services.EvenementService;
 import services.LoginService;
+
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -67,14 +70,24 @@ public class Main {
             System.out.println(logoutResult.message);
 
             // Suppression test
-            adminAction.supprimerCircuitParNom(circuit.getNom());
-            adminAction.supprimerVoiture("Porsche 911 GT3");
+            //adminAction.supprimerCircuitParNom(circuit.getNom());
+            //adminAction.supprimerVoiture("Porsche 911 GT3");
             //serviceEvenement.deleEvent("Spa en Juin");
         }
 
         // Connexion avec le client
         LoginResult result = login.loginClient("client@tracktoys.com", "1234");
         System.out.println(result.message);
+        ClientService clientService = new ClientService();
+        List<Evenement> evenementsDisponible = new ClientService().getEvenementsDisponibles();
+        if(evenementsDisponible.isEmpty()){
+            clientService.avertissementSiAucunEvenement();
+        }else{
+            System.out.println("Evenements disponible: ");
+            for (Evenement e : evenementsDisponible){
+                System.out.println("° " + e.getNomEvenement() + " le " + e.getDateEvenement());
+            }
+        }
     }
 }
 

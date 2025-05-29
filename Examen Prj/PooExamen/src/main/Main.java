@@ -59,7 +59,9 @@ public class Main {
             System.out.println("L'admin va créer un évènement.");
             Evenement evenementDemo = new Evenement("Spa en Juin", "2025-06-28", "Evenement pour les débutants et confirmé sur le circuit de spa Francorchamps", 1);
             EvenementService serviceEvenement = new EvenementService();
-            serviceEvenement.creatEvent(evenementDemo);
+            if(serviceEvenement.creatEvent(evenementDemo)){
+                System.out.println("Evènement " + evenementDemo.getNomEvenement() + " a été créér.");
+            }
             System.out.println("\n________________________________________ ");
 
 

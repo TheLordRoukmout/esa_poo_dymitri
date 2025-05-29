@@ -61,6 +61,15 @@ public class ConnexionData {
                     + "FOREIGN KEY(id_role) REFERENCES Roles(id_role)"
                     + ");";
 
+            String sqlEvenement = "CREATE TABLE IF NOT EXISTS Evenements("
+                    + "id_evenement INTEGER PRIMARY KEY,"
+                    + "nom_evenement TEXT NOT NULL,"
+                    + "date_evenement TEXT NOT NULL,"
+                    + "description_evenement TEXT NOT NULL,"
+                    + "id_circuit INTEGER NOT NULL,"
+                    + "FOREIGN KEY(id_circuit) REFERENCES Circuits(id_circuit) ON DELETE CASCADE"
+                    + ");";
+
             String sqlReservation = "CREATE TABLE IF NOT EXISTS Reservation("
                     + "id_reservation INTEGER PRIMARY KEY,"
                     + "nom_event TEXT NOT NULL,"
@@ -114,6 +123,7 @@ public class ConnexionData {
             stmt.execute(sqlCircuits);
             stmt.execute(sqlRoles);
             stmt.execute(sqlClients);
+            stmt.execute(sqlEvenement);
             stmt.execute(sqlReservation);
             stmt.execute(sqlMaintenance);
             stmt.execute(sqlAdmin);

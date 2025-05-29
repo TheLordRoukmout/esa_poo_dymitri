@@ -1,6 +1,6 @@
 package UnitTest;
 
-import main.AdminService;
+import services.AdminService;
 import main.obj.Circuit;
 import main.obj.Voitures;
 import org.junit.jupiter.api.Test;
@@ -80,7 +80,7 @@ public class TestAdminService {
     void SuppressionVoiture(){
         AdminService admin = new AdminService();
         Voitures voitureToDelete = new Voitures("Test x001", 90, 10.00, true);
-        boolean result = admin.supprimerVoiture(1);
+        boolean result = admin.supprimerVoiture("Test x001");
         assertTrue(result, "Voiture " + voitureToDelete.getModele() + " supprimé !");
     }
 
@@ -102,7 +102,7 @@ public class TestAdminService {
         assertTrue(ficheAjoutee, "La fiche InfoMecha devrait être ajoutée.");
 
         // 5. Supprimer la voiture
-        boolean voitureSupprimee = admin.supprimerVoiture(idVoiture);
+        boolean voitureSupprimee = admin.supprimerVoiture("Porsche 911 GT3");
         assertTrue(voitureSupprimee, "La voiture devrait être supprimée.");
     }
 

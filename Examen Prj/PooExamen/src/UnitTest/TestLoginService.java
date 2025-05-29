@@ -1,7 +1,7 @@
 package UnitTest;
 
 import main.LoginResult;
-import main.LoginService;
+import services.LoginService;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

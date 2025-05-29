@@ -1,5 +1,6 @@
-package main;
+package services;
 
+import main.ConnexionData;
 import main.obj.Circuit;
 import main.obj.Voitures;
 
@@ -31,7 +32,7 @@ public class AdminService {
 
         String sql = "INSERT INTO Circuits(nom_circuit, adresse_circuit, tarif_circuit, distance_circuit) VALUES (?, ?, ?, ?)";
         try (Connection conn = ConnexionData.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)){
+             PreparedStatement stmt = conn.prepareStatement(sql)){
 
             stmt.setString(1, circuit.getNom());
             stmt.setString(2, circuit.getAdresse());
@@ -126,13 +127,13 @@ public class AdminService {
         }
     }
 
-    public boolean supprimerVoiture(int idVotiure){
-        String sqlRequest = "DELETE FROM Voitures WHERE id_Voiture = ?";
+    public boolean supprimerVoiture(String nomVotiure){
+        String sqlRequest = "DELETE FROM Voitures WHERE model_Voiture = ?";
 
         try (Connection conn = ConnexionData.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sqlRequest)){
 
-            stmt.setInt(1, idVotiure);
+            stmt.setString(1, nomVotiure);
             int lignes = stmt.executeUpdate();
 
             if(lignes > 0){

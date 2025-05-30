@@ -112,29 +112,43 @@ public class LoginService {
 
 
     public LoginResult loginClient(String mail, String password) {
-        String sql = "SELECT * FROM Clients WHERE mail_client = ? AND password_client = ?";
+        String sql = "SELECT * FROM Clients WHERE mail_client = ?";
 
         try (Connection conn = ConnexionData.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, mail);
-            stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
 
             if (!rs.next()) {
-                return new LoginResult(false, "Fail: Wrong or Email not found.");
-            }
-            String passWordDataBase = rs.getString("password_client");
-            if(!passWordDataBase.equals(password)){
-                return new LoginResult(false, "Fail: Wrong password");
+                return new LoginResult(false, "❌ Aucun compte trouvé avec cet email.");
             }
 
-            return new LoginResult(true, "Connection sucessfull !");
+            String passWordDataBase = rs.getString("password_client");
+            if (!passWordDataBase.equals(password)) {
+                return new LoginResult(false, "❌ Mot de passe incorrect");
+            }
+
+            // ✅ Création du client connecté
+            Client client = new Client(
+                    rs.getInt("id_client"),
+                    rs.getString("nom_client"),
+                    rs.getString("prenom_client"),
+                    rs.getInt("age_client"),
+                    rs.getString("numPermis_client"),
+                    rs.getString("mail_client"),
+                    passWordDataBase,
+                    rs.getInt("id_role")
+            );
+
+            // ✅ Retourner LoginResult AVEC le client
+            return new LoginResult(true, "✅ Connexion client réussie.", client);
 
         } catch (SQLException e) {
-            return new LoginResult(false, "Error SQL: " +e.getMessage());
+            return new LoginResult(false, "❌ Erreur SQL : " + e.getMessage());
         }
     }
+
 
     public LoginResult logout(){
         if(currentAdmin != null){

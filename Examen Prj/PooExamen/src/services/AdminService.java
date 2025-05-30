@@ -14,6 +14,10 @@ public class AdminService {
         this.loginService = null;
     }
 
+    public AdminService(LoginService loginService) {
+        this.loginService = loginService;
+    }
+
     public boolean addCircuit(Circuit circuit){
         if(loginService != null && !loginService.isAdminConnected()){
             System.out.println("Action réfusé vous devez être admin");

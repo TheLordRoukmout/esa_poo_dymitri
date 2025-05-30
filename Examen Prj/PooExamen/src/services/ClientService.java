@@ -59,6 +59,11 @@ public class ClientService {
             return false;
         }
 
+        if(dejaReserve(idClient, evenement.getNomEvenement())){
+            System.out.println("Vous avez déja reservé cet évènement.");
+            return false;
+        }
+
         String sql = "INSERT INTO Reservation(nom_event, id_client, id_voiture, id_circuit, startDate_reservation, endDate_reservation, prixSeance_reservation, status_reservation) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -173,6 +178,48 @@ public class ClientService {
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'annulation de la réservation : " + e.getMessage());
         }
+        return false;
+    }
+
+    private boolean dejaReserve(int idClient, String nomEvenement) {
+        String sql = "SELECT COUNT(*) AS count FROM Reservation WHERE id_client = ? AND nom_event = ? AND status_reservation = 1";
+
+        try (Connection conn = ConnexionData.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idClient);
+            stmt.setString(2, nomEvenement);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0; // déjà réservé
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la vérification de réservation existante : " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean clientPermisValid(int idClient) {
+        String sql = "SELECT numPermis_client FROM Clients WHERE id_client = ?";
+
+        try (Connection conn = ConnexionData.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idClient);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String numPermis = rs.getString("numPermis_client");
+                return numPermis != null && !numPermis.trim().isEmpty();
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la vérification du permis : " + e.getMessage());
+        }
+
         return false;
     }
 

@@ -54,7 +54,7 @@ public class ConnexionData {
                     + "nom_client TEXT NOT NULL,"
                     + "prenom_client TEXT NOT NULL,"
                     + "age_client INTEGER NOT NULL,"
-                    + "numPermis_client TEXT NOT NULL UNIQUE,"
+                    + "numPermis_client TEXT UNIQUE,"
                     + "mail_client TEXT NOT NULL UNIQUE,"
                     + "password_client TEXT NOT NULL,"
                     + "id_role INTEGER NOT NULL,"

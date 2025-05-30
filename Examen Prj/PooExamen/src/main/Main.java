@@ -1,6 +1,7 @@
 package main;
 
 import main.obj.Circuit;
+import main.obj.Client;
 import main.obj.Evenement;
 import main.obj.Voitures;
 import services.AdminService;
@@ -42,6 +43,15 @@ public class Main {
             if(adminAction.addVoiture(voiture)){
 
                 int idVoiture = adminAction.getLastVoitureIdByModele(voiture.getModele());
+
+                ClientService clientServiceTemp = new ClientService();
+                voiture = clientServiceTemp.getVoitureById(idVoiture);
+
+                if (voiture == null || voiture.getIdVoiture() == null) {
+                    System.out.println("❌ Impossible de récupérer la voiture avec son ID après ajout.");
+                    return;
+                }
+
                 boolean ficheOK = adminAction.addInfoMechaData(idVoiture, 80.0, 8.0, 0.00, "Roulable");
 
                 if (!ficheOK) {
@@ -66,6 +76,8 @@ public class Main {
 
         // Connexion avec le client
         LoginResult result = login.loginClient("client@tracktoys.com", "1234");
+        Client clientConnecte = result.client;
+        int idClient = clientConnecte.getIdClient();
         System.out.println(result.message);
 
         ClientService clientService = new ClientService();
@@ -86,6 +98,10 @@ public class Main {
                         evenementASuivre = ev;
                         break;
                     }
+                }
+                if (!clientService.clientPermisValid(idClient)) {
+                    System.out.println("❌ Le client ne possède pas de permis.");
+                    return;
                 }
 
                 if(evenementASuivre == null){

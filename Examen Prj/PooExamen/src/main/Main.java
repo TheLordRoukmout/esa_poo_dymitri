@@ -13,8 +13,8 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Connexion en tant qu'admin....");
-
         LoginService login = new LoginService();
+        Voitures voiture = null;  // ✅ On déclare ici en haut pour l'utiliser partout
 
         // Connexion avec l'admin
         LoginResult adminResult = login.loginAdmin("admin@tracktoys.com", "admin123");
@@ -25,7 +25,6 @@ public class Main {
             System.out.println("L'admin créer un circuit et un véhicule pour l'évenement à venir.");
             AdminService adminAction = new AdminService();
 
-            // --- Ajout du circuit ---
             Circuit circuit = new Circuit("Spa Francorchamps", "Liège spa", 80.00, 6);
             if(adminAction.addCircuit(circuit)){
                 System.out.println("✅ Circuit " + circuit.getNom() + " ajouté !");
@@ -33,8 +32,8 @@ public class Main {
                 System.out.println("❌ Circuit déjà existant.");
             }
 
-            // --- Ajout de la voiture ---
-            Voitures voiture = new Voitures("Porsche 911 GT3", 510, 250.0, true);
+            // --- Création et ajout voiture ---
+            voiture = new Voitures("Porsche 911 GT3", 510, 250.0, true);  // Affectation à la variable globale
 
             if(adminAction.voitureAlreadyExist(voiture.getModele())){
                 System.out.println("⚠️ Voiture " + voiture.getModele() + " existe déjà");
@@ -42,24 +41,19 @@ public class Main {
 
             if(adminAction.addVoiture(voiture)){
 
-                // Récupérer l’ID de la voiture qu’on vient d’ajouter
                 int idVoiture = adminAction.getLastVoitureIdByModele(voiture.getModele());
-
-                // Ajouter les infos mécaniques manuellement
                 boolean ficheOK = adminAction.addInfoMechaData(idVoiture, 80.0, 8.0, 0.00, "Roulable");
 
-                if (ficheOK) {
-
-                } else {
+                if (!ficheOK) {
                     System.out.println("❌ Erreur ajout fiche méca.");
                 }
 
             } else {
                 System.out.println("❌ Échec de l'ajout de la voiture");
             }
+
             System.out.println("\n________________________________________ ");
 
-            System.out.println("L'admin va créer un évènement.");
             Evenement evenementDemo = new Evenement("Spa en Juin", "2025-06-28", "Evenement pour les débutants et confirmé sur le circuit de spa Francorchamps", 1);
             EvenementService serviceEvenement = new EvenementService();
             if(serviceEvenement.creatEvent(evenementDemo)){
@@ -68,26 +62,59 @@ public class Main {
             System.out.println("\n________________________________________ ");
             LoginResult logoutResult = login.logout();
             System.out.println(logoutResult.message);
-
-            // Suppression test
-            //adminAction.supprimerCircuitParNom(circuit.getNom());
-            //adminAction.supprimerVoiture("Porsche 911 GT3");
-            //serviceEvenement.deleEvent("Spa en Juin");
         }
 
         // Connexion avec le client
         LoginResult result = login.loginClient("client@tracktoys.com", "1234");
         System.out.println(result.message);
+
         ClientService clientService = new ClientService();
-        List<Evenement> evenementsDisponible = new ClientService().getEvenementsDisponibles();
+        List<Evenement> evenementsDisponible = clientService.getEvenementsDisponibles();
+
         if(evenementsDisponible.isEmpty()){
             clientService.avertissementSiAucunEvenement();
-        }else{
+        } else {
             System.out.println("Evenements disponible: ");
             for (Evenement e : evenementsDisponible){
                 System.out.println("° " + e.getNomEvenement() + " le " + e.getDateEvenement());
             }
+
+            try {
+                Evenement evenementASuivre = null;
+                for (Evenement ev : evenementsDisponible){
+                    if(ev.getNomEvenement().equalsIgnoreCase("Spa en Juin")){  // ✅ ignoreCase pour éviter les erreurs de majuscules
+                        evenementASuivre = ev;
+                        break;
+                    }
+                }
+
+                if(evenementASuivre == null){
+                    System.out.println("❌ Événement non trouvé");
+                    return;
+                }
+
+                if (voiture == null) {
+                    voiture = clientService.getVoitureById(1); // 🔄 En secours si elle n'existait pas côté admin
+                }
+
+                if (voiture == null) {
+                    System.out.println("❌ Voiture introuvable.");
+                    return;
+                }
+
+                boolean reservé = clientService.reserverEvenement(1, evenementASuivre, voiture, evenementASuivre.getDateEvenement());
+
+                if (reservé) {
+                    System.out.println("✅ Réservation effectuée pour l'événement " + evenementASuivre.getNomEvenement() + " avec la voiture " + voiture.getModele());
+                } else {
+                    System.out.println("❌ La réservation a échoué.");
+                }
+            } catch (ClientService.VoitureIndisponibleException e) {
+                System.out.println("❌ Échec de réservation : " + e.getMessage());
+            }
         }
     }
 }
+
+
 

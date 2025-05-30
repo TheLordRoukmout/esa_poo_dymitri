@@ -8,6 +8,7 @@ import services.AdminService;
 import services.ClientService;
 import services.EvenementService;
 import services.LoginService;
+import sessionRacing.SessionAdmin;
 
 import java.util.List;
 
@@ -128,6 +129,20 @@ public class Main {
             } catch (ClientService.VoitureIndisponibleException e) {
                 System.out.println("❌ Échec de réservation : " + e.getMessage());
             }
+        }
+
+        LoginResult logoutClient = login.logout();
+        System.out.println(logoutClient.message);
+        System.out.println("\n________________________________________ ");
+
+        //Nouvelle connexion de l'admin
+        System.out.println("🔐 Connexion de l'admin pour débuter une session...");
+        LoginResult adminLogin = login.loginAdmin("admin@tracktoys.com", "admin123");
+        System.out.println(adminLogin.message);
+
+        if (adminLogin.success) {
+            SessionAdmin session = new SessionAdmin();
+            session.debutSession("Spa en Juin", 1); // Tu appelles ici ta méthode spéciale pour démarrer une session admin
         }
     }
 }

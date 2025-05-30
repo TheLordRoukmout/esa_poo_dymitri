@@ -2,6 +2,7 @@ package services;
 
 import main.ConnexionData;
 import main.obj.Circuit;
+import main.obj.Evenement;
 import main.obj.Voitures;
 
 import java.sql.*;
@@ -252,6 +253,85 @@ public class AdminService {
         }
         return -1;
     }
+
+    public Evenement getEvenementByNom(String nomEvenement) {
+        String sql = "SELECT * FROM Evenements WHERE nom_evenement = ?";
+
+        try (Connection conn = ConnexionData.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nomEvenement);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Evenement(
+                        rs.getString("nom_evenement"),
+                        rs.getString("date_evenement"),
+                        rs.getString("description_evenement"),
+                        rs.getInt("id_circuit")
+                );
+            }
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur lors de la récupération de l'événement : " + e.getMessage());
+        }
+
+        return null; // aucun événement trouvé
+    }
+
+    public Voitures getVoitureById(int idVoiture) {
+        String sql = "SELECT * FROM Voitures WHERE id_voiture = ?";
+
+        try (Connection conn = ConnexionData.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idVoiture);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Voitures(
+                        rs.getInt("id_voiture"),
+                        rs.getString("model_voiture"),
+                        rs.getInt("puissance_voiture"),
+                        rs.getDouble("priceLocation_voiture"),
+                        rs.getInt("disponibilite_voiture") == 1
+                );
+            }
+
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur lors de la récupération de la voiture : " + e.getMessage());
+        }
+
+        return null; // aucune voiture trouvée
+    }
+
+    public String getNomPrenomClientPourReservation(String nomEvenement, int idVoiture) {
+        String sql = """
+        SELECT nom_client, prenom_client
+        FROM Reservation
+        JOIN Clients ON Reservation.id_client = Clients.id_client
+        WHERE Reservation.nom_event = ? AND Reservation.id_voiture = ?
+        LIMIT 1
+    """;
+
+        try (Connection conn = ConnexionData.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nomEvenement);
+            stmt.setInt(2, idVoiture);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("prenom_client") + " " + rs.getString("nom_client");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("❌ Erreur lors de la récupération du client : " + e.getMessage());
+        }
+
+        return "Client inconnu";
+    }
+
+
 
 
 }

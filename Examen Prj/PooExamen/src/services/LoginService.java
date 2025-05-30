@@ -141,6 +141,8 @@ public class LoginService {
                     rs.getInt("id_role")
             );
 
+            this.currentClient = client;
+
             // ✅ Retourner LoginResult AVEC le client
             return new LoginResult(true, "✅ Connexion client réussie.", client);
 
@@ -150,18 +152,19 @@ public class LoginService {
     }
 
 
-    public LoginResult logout(){
-        if(currentAdmin != null){
+    public LoginResult logout() {
+        if (currentAdmin != null){
             System.out.println("Déconnexion de " + currentAdmin.getNom() + " en cours...");
             currentAdmin = null;
-            return new LoginResult(true, "Deconnexion réussi.");
+            return new LoginResult(true, "Déconnexion réussie.");
         }
 
-        if(currentClient != null){
+        if (currentClient != null){
+            System.out.println("Déconnexion de " + currentClient.getNom() + " en cours...");
             currentClient = null;
-            System.out.println("Deconnecxion de " + currentClient.getNom() + " en cours...");
-            return new LoginResult(true, "Deconnexion réussi");
+            return new LoginResult(true, "Déconnexion réussie");
         }
-        return new LoginResult(false, "Erreur lors de la déconnexion car aucun user état connecté");
+
+        return new LoginResult(false, "❌ Erreur : aucun utilisateur n'était connecté.");
     }
 }

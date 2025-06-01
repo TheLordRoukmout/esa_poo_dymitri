@@ -1,15 +1,14 @@
 package main;
 
-import main.obj.Circuit;
-import main.obj.Client;
-import main.obj.Evenement;
-import main.obj.Voitures;
+import main.obj.*;
 import services.AdminService;
 import services.ClientService;
 import services.EvenementService;
 import services.LoginService;
 import sessionRacing.SessionAdmin;
+import Simulation.SimulationRoulage;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class Main {
@@ -143,6 +142,21 @@ public class Main {
         if (adminLogin.success) {
             SessionAdmin session = new SessionAdmin();
             session.debutSession("Spa en Juin", 1); // Tu appelles ici ta méthode spéciale pour démarrer une session admin
+            session.demarrerRoulage();
+            Client client = clientService.getClientById(1);
+            Simulation simulation = new Simulation(
+                    client.getIdClient(),
+                    session.getVoiturePriseEnCharge().getIdVoiture(),
+                    session.getEvenementActif().getIdCircuit(),
+                    session.getAdminConnecte().getIdAdmin(),
+                    session.getChronoStart(),
+                    session.getChronoEnd(),
+                    LocalDate.now(),   // ou session.getDate() si tu l’as
+                    session.getNombreTours()  // à ajouter dans SessionAdmin si nécessaire
+            );
+            SimulationRoulage simulationRoulage = new SimulationRoulage();
+            simulationRoulage.enregistrerSimulation(simulation);
+
         }
     }
 }

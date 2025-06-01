@@ -115,7 +115,7 @@ public class ConnexionData {
                     + "FOREIGN KEY(id_client) REFERENCES Clients(id_client),"
                     + "FOREIGN KEY(id_voiture) REFERENCES Voitures(id_voiture),"
                     + "FOREIGN KEY(id_circuit) REFERENCES Circuits(id_circuit),"
-                    + "FOREIGN KEY(id_admin) REFERENCES Admins(id_admin)"
+                    + "FOREIGN KEY(id_admin) REFERENCES Admin(id_admin)"
                     +");";
 
             stmt.execute(sqlVoitures);

@@ -1,6 +1,7 @@
 package services;
 
 import main.ConnexionData;
+import main.obj.Client;
 import main.obj.Evenement;
 import main.obj.Voitures;
 
@@ -9,6 +10,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientService {
+
+    public Client getClientById(int idClient) {
+        String sql = "SELECT id_client, nom_client, prenom_client, age_client, numPermis_client, mail_client, password_client, id_role FROM Clients WHERE id_client = ?";
+
+        try (Connection conn = ConnexionData.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idClient);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Client(
+                        rs.getInt("id_client"),
+                        rs.getString("nom_client"),
+                        rs.getString("prenom_client"),
+                        rs.getInt("age_client"),
+                        rs.getString("numPermis_client"),
+                        rs.getString("mail_client"),
+                        rs.getString("password_client"),
+                        rs.getInt("id_role")
+                );
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération du client : " + e.getMessage());
+        }
+
+        return null; // client non trouvé
+    }
+
 
     public List<Evenement> getEvenementsDisponibles() {
         List<Evenement> evenements = new ArrayList<>();

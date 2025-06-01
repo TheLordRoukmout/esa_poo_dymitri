@@ -2,10 +2,7 @@ package sessionRacing;
 
 import main.ConnexionData;
 import main.LoginResult;
-import main.obj.Admin;
-import main.obj.Circuit;
-import main.obj.Evenement;
-import main.obj.Voitures;
+import main.obj.*;
 import services.AdminService;
 import services.LoginService;
 
@@ -13,12 +10,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalTime;
 
 public class SessionAdmin {
 
     private final Admin adminConnecte;
     private Evenement evenementActif;
     private Voitures voiturePriseEnCharge;
+    private Simulation simulation;
+
+    private LocalTime chronoStart;
+    private LocalTime chronoEnd;
 
     private final LoginService loginService;
     private final AdminService adminService;
@@ -70,5 +72,70 @@ public class SessionAdmin {
         System.out.println("🔧 Voiture prise en charge : " + voiture.getModele());
         System.out.println("Client: " + clientNomParticipant);
     }
+
+    public void demarrerRoulage() {
+        this.chronoStart = LocalTime.now();
+        if (evenementActif == null || voiturePriseEnCharge == null) {
+            System.out.println("❌ Impossible de démarrer : événement ou voiture non défini.");
+            return;
+        }
+
+        // Exemple d'affichage du nom du participant
+        String nomParticipant = adminService.getNomPrenomClientPourReservation(
+                evenementActif.getNomEvenement(),
+                voiturePriseEnCharge.getIdVoiture()
+        );
+        System.out.println("🚗 Participant : " + nomParticipant + " démarre le roulage !");
+        System.out.println("🏁 Circuit : " + evenementActif.getNomEvenement());
+
+        // Simulation d’un roulage : 100% en 20 étapes (toutes les secondes)
+        final int dureeTotalSecondes = 20;
+        for (int i = 0; i <= dureeTotalSecondes; i++) {
+            int avancement = (i * 100) / dureeTotalSecondes;
+            String chrono = String.format("%02d:%02d", i / 60, i % 60);
+            System.out.println("⏱️ Chrono : " + chrono + " | Avancement : " + avancement + "%");
+
+            try {
+                Thread.sleep(1000); // pause 1 seconde pour simuler le temps réel
+            } catch (InterruptedException e) {
+                System.out.println("⛔ Simulation interrompue.");
+                return;
+            }
+        }
+        this.chronoEnd = LocalTime.now();
+
+        System.out.println("🏁 Fin du roulage !");
+    }
+
+    public Evenement getEvenementActif() {
+        return this.evenementActif;
+    }
+
+    public Voitures getVoiturePriseEnCharge() {
+        return this.voiturePriseEnCharge;
+    }
+
+    public Admin getAdminConnecte() {
+        return this.adminConnecte;
+    }
+
+    public LocalTime getChronoStart() {
+        return this.chronoStart;
+    }
+
+    public LocalTime getChronoEnd() {
+        return this.chronoEnd;
+    }
+
+    private int nombreTours = 5; // ou autre valeur par défaut
+
+    public int getNombreTours() {
+        return this.nombreTours;
+    }
+
+    public void setNombreTours(int nombreTours) {
+        this.nombreTours = nombreTours;
+    }
+
 
 }

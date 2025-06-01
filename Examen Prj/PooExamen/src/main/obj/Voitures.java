@@ -1,43 +1,30 @@
 package main.obj;
 
-public class Voitures {
+public class Voitures extends Vehicule {
     private Integer idVoiture;
-    private String modele;
-    private int puissance;
     private double prixLocation;
     private boolean disponible;
 
-    // Ancien constructeur sans id (rien à changer pour le code existant)
-    public Voitures(String modele, int puissance, double prixLocation, boolean disponible){
-        this(null, modele, puissance, prixLocation, disponible); // délègue au constructeur principal
+    public Voitures(String modele, int puissance, double prixLocation, boolean disponible) {
+        this(null, modele, puissance, prixLocation, disponible);
     }
 
-    // Nouveau constructeur avec id (à utiliser là où c'est nécessaire)
-    public Voitures(Integer id, String modele, int puissance, double prixLocation, boolean disponible){
+    public Voitures(Integer id, String modele, int puissance, double prixLocation, boolean disponible) {
+        super(modele, puissance); // appel au constructeur de Vehicule
         this.idVoiture = id;
-        this.modele = modele;
-        this.puissance = puissance;
         this.prixLocation = prixLocation;
         this.disponible = disponible;
     }
 
-    public Integer getIdVoiture(){
+    public Integer getIdVoiture() {
         return idVoiture;
     }
 
-    public String getModele(){
-        return modele;
-    }
-
-    public int getPuissance(){
-        return puissance;
-    }
-
-    public double getPrixLocation(){
+    public double getPrixLocation() {
         return prixLocation;
     }
 
-    public boolean getDisponible(){
+    public boolean getDisponible() {
         return disponible;
     }
 
@@ -47,4 +34,8 @@ public class Voitures {
         return modele + " - " + puissance + "CV - " + prixLocation + "€/j - " + etat;
     }
 
+    @Override
+    public void afficherDetails() {
+        System.out.println(this.toString());
+    }
 }

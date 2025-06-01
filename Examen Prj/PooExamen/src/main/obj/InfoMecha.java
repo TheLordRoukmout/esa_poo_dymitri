@@ -35,6 +35,24 @@ public class InfoMecha {
         return etat;
     }
 
+
+    public void rouler(double km, double consommationParKm) {
+        double carburantNecessaire = km * consommationParKm;
+
+        if (fuelLive >= carburantNecessaire) {
+            fuelLive -= carburantNecessaire;
+            kilometrage += km;
+            System.out.println("La voiture a roulé " + km + " km.");
+        } else {
+            System.out.println("Pas assez de carburant pour parcourir " + km + " km.");
+        }
+    }
+
+    public void faireLePlein() {
+        fuelLive = fuelMax;
+        System.out.println("Le plein a été effectué.");
+    }
+
     @Override
     public String toString() {
         return "Carburant : " + fuelLive + "/" + fuelMax + "L | "

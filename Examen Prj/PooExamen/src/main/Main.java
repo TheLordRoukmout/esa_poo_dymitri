@@ -26,7 +26,7 @@ public class Main {
             System.out.println("L'admin créer un circuit et un véhicule pour l'évenement à venir.");
             AdminService adminAction = new AdminService();
 
-            Circuit circuit = new Circuit("Spa Francorchamps", "Liège spa", 80.00, 6);
+            Circuit circuit = new Circuit("Spa Francorchamps", "Liège spa", 80.00, 22);
             if(adminAction.addCircuit(circuit)){
                 System.out.println("✅ Circuit " + circuit.getNom() + " ajouté !");
             } else {

@@ -5,7 +5,7 @@ namespace ExamenCafetiere.objCafetiere;
 public class SupportChauffant : IElementCafetiere
 {
     private int tempsRestant = 0;
-    private const int dureeMax = 1800;
+    private const int dureeMax = 1200;
 
     public bool EstActif => tempsRestant > 0;
 

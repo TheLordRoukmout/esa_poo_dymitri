@@ -1,0 +1,15 @@
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\bin\Debug\net8.0\ExamCafetiere.exe
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\bin\Debug\net8.0\ExamCafetiere.deps.json
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\bin\Debug\net8.0\ExamCafetiere.runtimeconfig.json
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\bin\Debug\net8.0\ExamCafetiere.dll
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\bin\Debug\net8.0\ExamCafetiere.pdb
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\obj\Debug\net8.0\ExamCafetiere.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\obj\Debug\net8.0\ExamCafetiere.AssemblyInfoInputs.cache
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\obj\Debug\net8.0\ExamCafetiere.AssemblyInfo.cs
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\obj\Debug\net8.0\ExamCafetiere.csproj.CoreCompileInputs.cache
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\obj\Debug\net8.0\ExamCafetiere.sourcelink.json
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\obj\Debug\net8.0\ExamCafetiere.dll
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\obj\Debug\net8.0\refint\ExamCafetiere.dll
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\obj\Debug\net8.0\ExamCafetiere.pdb
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\obj\Debug\net8.0\ExamCafetiere.genruntimeconfig.cache
+C:\Users\dymit\Documents\GitHub\esa_poo_dymitri\ExamenCafetiere\ExamCafetiere\ExamCafetiere\obj\Debug\net8.0\ref\ExamCafetiere.dll

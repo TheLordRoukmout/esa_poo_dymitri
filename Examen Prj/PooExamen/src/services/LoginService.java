@@ -10,17 +10,32 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Service responsable de la gestion des connexions et déconnexions pour les utilisateurs (admins et clients).
+ */
 public class LoginService {
 
     private Admin currentAdmin = null;
     private Client currentClient = null;
 
-    public boolean isAdminConnected(){
+    /**
+     * Vérifie si un administrateur est actuellement connecté.
+     *
+     * @return true si un admin est connecté, false sinon
+     */
+    public boolean isAdminConnected() {
         return currentAdmin != null;
     }
 
+    /**
+     * Tentative de connexion en tant que client si la connexion admin a échoué.
+     *
+     * @param mail     email du client
+     * @param password mot de passe du client
+     * @return un objet {@link LoginResult} indiquant le succès ou l'échec de la connexion
+     */
     private LoginResult loginClientAsFallback(String mail, String password) {
-        String sqlClient = "SELECT password_client FROM Clients WHERE mail_client = ?";
+        String sqlClient = "SELECT * FROM Clients WHERE mail_client = ?";
 
         try (Connection conn = ConnexionData.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sqlClient)) {
@@ -56,15 +71,20 @@ public class LoginService {
         }
     }
 
-
+    /**
+     * Tente de connecter un administrateur à partir de son email et mot de passe.
+     * Si l'utilisateur n'est pas admin, essaie une connexion client.
+     *
+     * @param mail     email de l'utilisateur
+     * @param password mot de passe
+     * @return un objet {@link LoginResult} indiquant le succès ou l'échec de la connexion
+     */
     public LoginResult loginAdmin(String mail, String password) {
-        // 1. Vérifier si un admin existe avec cet email
         String sqlAdmin = "SELECT a.id_admin, a.nom_admin, a.prenom_admin, a.mail_admin, " +
                 "a.password_admin, a.id_role, r.nom_role " +
                 "FROM Admin a " +
                 "JOIN Roles r ON a.id_role = r.id_role " +
                 "WHERE mail_admin = ?";
-
 
         try (Connection conn = ConnexionData.getConnection();
              PreparedStatement stmtAdmin = conn.prepareStatement(sqlAdmin)) {
@@ -76,14 +96,11 @@ public class LoginService {
                 String passwordEnBase = rsAdmin.getString("password_admin");
                 String role = rsAdmin.getString("nom_role");
 
-                // Email trouvé, on vérifie le mot de passe
                 if (!passwordEnBase.equals(password)) {
                     return new LoginResult(false, "❌ Mot de passe incorrect pour le compte admin.");
                 }
 
-                // Mot de passe correct → vérifier le rôle
                 if ("admin".equalsIgnoreCase(role)) {
-
                     this.currentAdmin = new Admin(
                             rsAdmin.getInt("id_admin"),
                             rsAdmin.getString("nom_admin"),
@@ -95,12 +112,10 @@ public class LoginService {
 
                     return new LoginResult(true, "✅ Connexion admin réussie.", this.currentAdmin);
                 } else {
-                    // Pas admin → tenter client
                     return loginClientAsFallback(mail, password);
                 }
 
             } else {
-                // Aucun admin avec cet email → tenter client
                 return loginClientAsFallback(mail, password);
             }
 
@@ -109,8 +124,13 @@ public class LoginService {
         }
     }
 
-
-
+    /**
+     * Tente de connecter un client à partir de son email et mot de passe.
+     *
+     * @param mail     email du client
+     * @param password mot de passe du client
+     * @return un objet {@link LoginResult} contenant les informations de connexion
+     */
     public LoginResult loginClient(String mail, String password) {
         String sql = "SELECT * FROM Clients WHERE mail_client = ?";
 
@@ -129,7 +149,6 @@ public class LoginService {
                 return new LoginResult(false, "❌ Mot de passe incorrect");
             }
 
-            // ✅ Création du client connecté
             Client client = new Client(
                     rs.getInt("id_client"),
                     rs.getString("nom_client"),
@@ -142,8 +161,6 @@ public class LoginService {
             );
 
             this.currentClient = client;
-
-            // ✅ Retourner LoginResult AVEC le client
             return new LoginResult(true, "✅ Connexion client réussie.", client);
 
         } catch (SQLException e) {
@@ -151,15 +168,19 @@ public class LoginService {
         }
     }
 
-
+    /**
+     * Déconnecte l'utilisateur actuellement connecté (admin ou client).
+     *
+     * @return un objet {@link LoginResult} indiquant le succès ou l'échec de la déconnexion
+     */
     public LoginResult logout() {
-        if (currentAdmin != null){
+        if (currentAdmin != null) {
             System.out.println("Déconnexion de " + currentAdmin.getNom() + " en cours...");
             currentAdmin = null;
             return new LoginResult(true, "Déconnexion réussie.");
         }
 
-        if (currentClient != null){
+        if (currentClient != null) {
             System.out.println("Déconnexion de " + currentClient.getNom() + " en cours...");
             currentClient = null;
             return new LoginResult(true, "Déconnexion réussie");

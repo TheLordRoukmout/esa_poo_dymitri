@@ -7,17 +7,43 @@ import main.obj.Voitures;
 
 import java.sql.*;
 
+/**
+ * Service dédié aux actions d'administration :
+ * ajout, suppression et vérification de circuits, de voitures et de fiches mécaniques.
+ * Certaines méthodes nécessitent une authentification en tant qu'administrateur.
+ */
+
+
 public class AdminService {
 
     private final LoginService loginService;
+
+    /**
+     * Constructeur sans vérification d'identité.
+     * À utiliser uniquement pour des tests ou des cas sans session active.
+     */
+
 
     public AdminService() {
         this.loginService = null;
     }
 
+    /**
+     * Constructeur avec contrôle d'accès basé sur une session d'admin.
+     *
+     * @param loginService instance de LoginService pour vérifier les droits admin
+     */
+
     public AdminService(LoginService loginService) {
         this.loginService = loginService;
     }
+
+    /**
+     * Ajoute un nouveau circuit à la base de données après vérifications.
+     *
+     * @param circuit le circuit à ajouter
+     * @return true si l'ajout a réussi, false sinon
+     */
 
     public boolean addCircuit(Circuit circuit){
         if(loginService != null && !loginService.isAdminConnected()){
@@ -62,6 +88,13 @@ public class AdminService {
         }
     }
 
+    /**
+     * Vérifie si un circuit existe déjà dans la base.
+     *
+     * @param nom le nom du circuit à vérifier
+     * @return true si le circuit existe déjà, false sinon
+     */
+
     public boolean circuitAlreadyExist(String nom){
         if(loginService != null && !loginService.isAdminConnected()){
             System.out.println("Action réfusé vous devez être admin");
@@ -80,6 +113,13 @@ public class AdminService {
             return false;
         }
     }
+
+    /**
+     * Supprime un circuit de la base selon son nom.
+     *
+     * @param nom le nom du circuit à supprimer
+     * @return true si la suppression a eu lieu, false sinon
+     */
 
     public boolean supprimerCircuitParNom(String nom) {
         if(loginService != null && !loginService.isAdminConnected()){
@@ -103,6 +143,14 @@ public class AdminService {
             return false;
         }
     }
+
+    /**
+     * Ajoute une voiture à la base de données.
+     * Si l'ajout est un succès, une fiche mécanique par défaut est aussi créée.
+     *
+     * @param voiture la voiture à ajouter
+     * @return true si la voiture et la fiche ont été ajoutées, false sinon
+     */
 
     public boolean addVoiture(Voitures voiture){
         if(loginService != null && !loginService.isAdminConnected()){
@@ -157,6 +205,13 @@ public class AdminService {
         }
     }
 
+    /**
+     * Vérifie si une voiture existe déjà dans la base de données.
+     *
+     * @param nomVotiure le nom du modèle de la voiture
+     * @return true si elle existe, false sinon
+     */
+
     public boolean supprimerVoiture(String nomVotiure){
         if(loginService != null && !loginService.isAdminConnected()){
             System.out.println("Action réfusé vous devez être admin");
@@ -184,6 +239,13 @@ public class AdminService {
         }
     }
 
+    /**
+     * Vérifie si une voiture existe déjà dans la base de données.
+     *
+     * @param nom le nom du modèle de la voiture
+     * @return true si elle existe, false sinon
+     */
+
     public boolean voitureAlreadyExist(String nom){
         if(loginService != null && !loginService.isAdminConnected()){
             System.out.println("Action réfusé vous devez être admin");
@@ -203,6 +265,17 @@ public class AdminService {
         }
     }
 
+
+    /**
+     * Ajoute une fiche mécanique à une voiture donnée.
+     *
+     * @param idVoiture   l'ID de la voiture
+     * @param fuelMax     capacité maximale du réservoir
+     * @param fuelLive    carburant restant
+     * @param kilometrage kilométrage actuel
+     * @param etat        état mécanique (ex. "Roulable")
+     * @return true si la fiche a été ajoutée, false sinon
+     */
 
     public boolean addInfoMechaData(int idVoiture, double fuelMax, double fuelLive, double kilometrage, String etat) {
         if(loginService != null && !loginService.isAdminConnected()){
@@ -238,6 +311,13 @@ public class AdminService {
     }
 
 
+    /**
+     * Récupère l'ID de la dernière voiture ajoutée correspondant à un modèle donné.
+     *
+     * @param modele le modèle recherché
+     * @return l'ID de la voiture ou -1 si non trouvé
+     */
+
     public int getLastVoitureIdByModele(String modele){
 
         String sqlRequest = "SELECT id_voiture FROM Voitures WHERE model_voiture = ? ORDER BY id_voiture DESC LIMIT 1";
@@ -253,6 +333,13 @@ public class AdminService {
         }
         return -1;
     }
+
+    /**
+     * Récupère un événement depuis la base en fonction de son nom.
+     *
+     * @param nomEvenement nom de l'événement
+     * @return l'objet Evenement correspondant ou null si non trouvé
+     */
 
     public Evenement getEvenementByNom(String nomEvenement) {
         String sql = "SELECT * FROM Evenements WHERE nom_evenement = ?";
@@ -277,6 +364,13 @@ public class AdminService {
 
         return null; // aucun événement trouvé
     }
+
+    /**
+     * Récupère une voiture à partir de son ID.
+     *
+     * @param idVoiture ID de la voiture
+     * @return une instance de Voitures ou null si introuvable
+     */
 
     public Voitures getVoitureById(int idVoiture) {
         String sql = "SELECT * FROM Voitures WHERE id_voiture = ?";
@@ -303,6 +397,14 @@ public class AdminService {
 
         return null; // aucune voiture trouvée
     }
+
+    /**
+     * Récupère le nom et le prénom d'un client ayant réservé un événement avec une voiture donnée.
+     *
+     * @param nomEvenement le nom de l'événement
+     * @param idVoiture    l'identifiant de la voiture
+     * @return une chaîne formatée "Prénom Nom" ou "Client inconnu" si non trouvé
+     */
 
     public String getNomPrenomClientPourReservation(String nomEvenement, int idVoiture) {
         String sql = """

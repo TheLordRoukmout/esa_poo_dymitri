@@ -11,7 +11,20 @@ import java.util.List;
 
 import main.Interface.IClientService;
 
+/**
+ * Service destiné aux opérations client, telles que la réservation d'événements,
+ * la vérification de disponibilité des voitures et la gestion des réservations.
+ */
+
 public class ClientService implements IClientService {
+
+
+    /**
+     * Récupère un client en fonction de son identifiant.
+     *
+     * @param idClient identifiant du client
+     * @return une instance de {@link Client} ou null si introuvable
+     */
 
     public Client getClientById(int idClient) {
         String sql = "SELECT id_client, nom_client, prenom_client, age_client, numPermis_client, mail_client, password_client, id_role FROM Clients WHERE id_client = ?";
@@ -76,6 +89,17 @@ public class ClientService implements IClientService {
             System.out.printf("%d événement(s) disponible(s)%n", evenements.size());
         }
     }
+
+    /**
+     * Tente de réserver un événement pour un client avec une voiture donnée.
+     *
+     * @param idClient         identifiant du client
+     * @param evenement        événement à réserver
+     * @param voiture          voiture utilisée
+     * @param dateReservation  date souhaitée de réservation
+     * @return true si la réservation a réussi, false sinon
+     * @throws VoitureIndisponibleException si la voiture est indisponible à la date choisie
+     */
 
     public boolean reserverEvenement(int idClient, Evenement evenement, Voitures voiture, String dateReservation) throws VoitureIndisponibleException {
         if (voiture.getIdVoiture() == null) {

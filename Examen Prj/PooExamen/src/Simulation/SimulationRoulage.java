@@ -1,6 +1,5 @@
 package Simulation;
 
-
 import main.ConnexionData;
 import main.obj.Simulation;
 
@@ -8,10 +7,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-
-
+/**
+ * Classe responsable de l'enregistrement des simulations de roulage (chronos) dans la base de données.
+ */
 public class SimulationRoulage {
 
+    /**
+     * Enregistre une simulation de roulage dans la table `Chronos` de la base de données.
+     *
+     * @param simulation L'objet {@link Simulation} contenant les données à enregistrer.
+     * @return {@code true} si l'enregistrement a réussi, {@code false} sinon.
+     */
     public boolean enregistrerSimulation(Simulation simulation) {
         String sql = "INSERT INTO Chronos(id_client, id_voiture, id_circuit, chronoStart, chronoEnd, date_chrono, id_admin) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -35,5 +41,4 @@ public class SimulationRoulage {
             return false;
         }
     }
-
 }

@@ -1,5 +1,9 @@
 package main;
 
+/**
+ * Merci de bien vouloir supprimer l'ancienne db car celle-ci a beaucoup changé.
+ */
+
 import main.Interface.IClientService;
 import main.obj.*;
 import services.AdminService;
@@ -11,6 +15,15 @@ import Simulation.SimulationRoulage;
 
 import java.time.LocalDate;
 import java.util.List;
+
+/**
+ * Classe principale de l'application TrackToys.
+ * Cette classe simule le fonctionnement complet de l'application :
+ * - Connexion d'un administrateur
+ * - Création de circuits, voitures et événements
+ * - Connexion d'un client et réservation
+ * - Démarrage et enregistrement d'une session de roulage
+ */
 
 public class Main {
     public static void main(String[] args) throws Exception{

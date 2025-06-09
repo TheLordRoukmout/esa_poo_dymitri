@@ -5,10 +5,22 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Classe utilitaire pour gérer la connexion à la base de données SQLite
+ * et initialiser la structure des tables nécessaires à l'application TrackToys.
+ */
 public class ConnexionData {
+
+    // URL de connexion à la base SQLite
     private static String url = "jdbc:sqlite:tracktoys.db";
 
-    // Méthode pour connecter et initialiser la db
+    /**
+     * Établit une connexion à la base de données, active les clés étrangères
+     * et initialise les tables si elles n'existent pas encore.
+     *
+     * @return une instance {@link Connection} active vers la base de données
+     * @throws SQLException en cas d'erreur de connexion à la base
+     */
     public static Connection getConnection() throws SQLException {
         Connection conn = DriverManager.getConnection(url);
         conn.createStatement().execute("PRAGMA foreign_keys=ON");
@@ -16,8 +28,16 @@ public class ConnexionData {
         return conn;
     }
 
+    /**
+     * Initialise la structure de la base de données en créant toutes les tables nécessaires
+     * si elles n'existent pas encore. Insère également des données par défaut (admin et client).
+     *
+     * @param conn la connexion active à la base de données
+     */
     private static void initializeDatabase(Connection conn) {
         try (Statement stmt = conn.createStatement()) {
+
+            // Création des tables principales
             String sqlVoitures = "CREATE TABLE IF NOT EXISTS Voitures("
                     + "id_voiture INTEGER PRIMARY KEY,"
                     + "model_voiture TEXT NOT NULL,"
@@ -118,6 +138,7 @@ public class ConnexionData {
                     + "FOREIGN KEY(id_admin) REFERENCES Admin(id_admin)"
                     +");";
 
+            // Exécution des requêtes
             stmt.execute(sqlVoitures);
             stmt.execute(sqlInfosMecha);
             stmt.execute(sqlCircuits);
@@ -129,22 +150,20 @@ public class ConnexionData {
             stmt.execute(sqlAdmin);
             stmt.execute(sqlChronos);
 
-            //Insertion automatique du role admin et client
+            // Insertion des rôles par défaut
             stmt.execute("INSERT OR IGNORE INTO Roles(id_role, nom_role) VALUES (1, 'Admin');");
             stmt.execute("INSERT OR IGNORE INTO Roles(id_role, nom_role) VALUES (2, 'Client');");
 
-            //Vérification de l'existance d'un admin
+            // Vérification et insertion d'un administrateur par défaut
             var rs = stmt.executeQuery("SELECT COUNT(*) AS TOTAL FROM Admin;");
             if (rs.next() && rs.getInt("total") == 0) {
                 String insertAdmin = "INSERT INTO Admin(id_admin, nom_admin, prenom_admin, mail_admin, password_admin, id_role)"
                         + "VALUES (1, 'Super', 'Admin', 'admin@tracktoys.com', 'admin123', 1);";
                 stmt.executeUpdate(insertAdmin);
                 System.out.println("Admin created");
-            }else{
-                //System.out.println("Admin already exists");
             }
 
-            // Vérification de l'existence d'un client
+            // Vérification et insertion d'un client par défaut
             var rsClient = stmt.executeQuery("SELECT COUNT(*) AS total FROM Clients;");
             if (rsClient.next() && rsClient.getInt("total") == 0) {
                 String insertClient = "INSERT INTO Clients(nom_client, prenom_client, age_client, numPermis_client, mail_client, password_client, id_role) "
@@ -153,14 +172,15 @@ public class ConnexionData {
                 System.out.println("Client created");
             }
 
-            //System.out.println("Database check and initialized");
-
         } catch (SQLException e) {
             System.err.println("Error: " + e.getMessage());
         }
     }
 
-    // Méthode test Connection
+    /**
+     * Méthode utilitaire pour tester la connexion à la base de données
+     * et afficher un message de confirmation si la structure est correcte.
+     */
     public static void testConnection() {
         try (Connection conn = getConnection()) {
             System.out.println("Connexion réussie et structure validée");

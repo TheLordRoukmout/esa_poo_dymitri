@@ -1,5 +1,10 @@
 package main.obj;
 
+/**
+ * Représente un événement organisé sur un circuit.
+ * Contient des informations telles que le nom, la date, la description de l'événement,
+ * ainsi que l'identifiant du circuit concerné.
+ */
 public class Evenement {
     private String nomEvenement;
     private String dateEvenement;

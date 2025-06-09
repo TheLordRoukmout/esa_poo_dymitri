@@ -1,7 +1,11 @@
 package main.obj;
 
+/**
+ * Représente un client inscrit dans le système.
+ * Contient les informations personnelles du client, ses identifiants de connexion
+ * et les données relatives à son permis de conduire.
+ */
 public class Client {
-
 
     private int idClient;
     private String nom;
@@ -12,7 +16,6 @@ public class Client {
     private String password;
     private int idRole;
 
-    // Constructeur
     public Client(int idClient, String nom, String prenom, int age, String numPermis, String mail, String password, int idRole) {
         this.idClient = idClient;
         this.nom = nom;
@@ -24,7 +27,6 @@ public class Client {
         this.idRole = idRole;
     }
 
-    // Getters et Setters
     public int getIdClient() {
         return idClient;
     }

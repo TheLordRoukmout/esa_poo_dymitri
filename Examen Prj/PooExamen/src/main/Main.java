@@ -1,5 +1,6 @@
 package main;
 
+import main.Interface.IClientService;
 import main.obj.*;
 import services.AdminService;
 import services.ClientService;
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         System.out.println("Connexion en tant qu'admin....");
         LoginService login = new LoginService();
         Voitures voiture = null;  // ✅ On déclare ici en haut pour l'utiliser partout
@@ -80,7 +81,7 @@ public class Main {
         int idClient = clientConnecte.getIdClient();
         System.out.println(result.message);
 
-        ClientService clientService = new ClientService();
+        IClientService clientService = new ClientService();
         List<Evenement> evenementsDisponible = clientService.getEvenementsDisponibles();
 
         if(evenementsDisponible.isEmpty()){

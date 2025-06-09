@@ -26,7 +26,7 @@ namespace ExamenCafetiere
         
             for (int i = 0; i < 120; i++)
             {
-                //Console.Clear(); // Rafraichir la console pour que ce soit beau
+                Console.Clear(); // Rafraichir la console pour que ce soit beau
                 Console.WriteLine($"Temps : {i + 1} sec");
                 Console.WriteLine($"Température : {resistance.Temperature} °C");
                 Console.WriteLine($"Eau restante dans le réservoir : {reservoir.ContenuEau} ml");

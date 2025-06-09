@@ -9,7 +9,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientService {
+import main.Interface.IClientService;
+
+public class ClientService implements IClientService {
 
     public Client getClientById(int idClient) {
         String sql = "SELECT id_client, nom_client, prenom_client, age_client, numPermis_client, mail_client, password_client, id_role FROM Clients WHERE id_client = ?";
